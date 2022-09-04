@@ -1,10 +1,7 @@
 const CustomerModel = require('../models/Customer');
 const { createCustomerSanitize } = require('../helpers/sanitizers');
-const { body, validationResult } = require('express-validator');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const { validationResult } = require('express-validator');
 const { v4: uuidv4 } = require('uuid');
-const passport = require('passport');
 
 exports.createNewCustomer = [
     ...createCustomerSanitize,
