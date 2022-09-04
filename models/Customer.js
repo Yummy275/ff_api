@@ -10,7 +10,8 @@ const CustomerSchema = new Schema({
     city: { type: String, required: true },
     state: { type: String, required: true },
     zip: { type: String, required: true },
-    issues: [{ type: Schema.Types.ObjectId, ref: 'Issue' }],
+    issues: { type: Array, default: [] },
+    id: { type: String, required: true },
 });
 
 module.exports = mongoose.model('Customer', CustomerSchema);
