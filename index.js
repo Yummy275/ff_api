@@ -12,6 +12,18 @@ app.use(express.json());
 const corsOptions = { credentials: true, origin: 'http://localhost:3001' };
 app.use(cors(corsOptions));
 
+//Set up mongoose connection
+const mongoDB = process.env.MONGO_DB_URL;
+mongoose.connect(
+    mongoDB,
+    { useNewUrlParser: true, useUnifiedTopology: true },
+    (err) => {
+        if (!err) console.log('MongoDB connection successful.');
+    }
+);
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 app.get('/', (req, res) => {
     res.send('Welcome home');
 });
