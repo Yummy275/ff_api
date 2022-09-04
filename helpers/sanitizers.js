@@ -20,3 +20,10 @@ exports.createCustomerSanitize = [
     body('state').trim().isLength({ max: 2 }),
     body('zip').isPostalCode('any'),
 ];
+
+exports.issuesSanitize = [
+    body('issue')
+        .trim()
+        .isLength({ min: 1, max: 1000 })
+        .withMessage('Issue must be less than 1000 characters'),
+];

@@ -1,6 +1,9 @@
 const CustomerModel = require('../models/Customer');
 const IssueModel = require('../models/Issue');
-const { createCustomerSanitize } = require('../helpers/sanitizers');
+const {
+    createCustomerSanitize,
+    issuesSanitize,
+} = require('../helpers/sanitizers');
 const { validationResult } = require('express-validator');
 const { v4: uuidv4 } = require('uuid');
 
@@ -13,7 +16,7 @@ exports.createNewCustomer = [
         if (!errors.isEmpty()) {
             console.log(errors);
             res.json({
-                error: 'Sorry, something went wrong siging up. Try again later.',
+                error: 'Check inputs',
             });
         }
 
@@ -35,7 +38,7 @@ exports.createNewCustomer = [
             if (err) {
                 return res.json({ error: err.message });
             }
-            const issue = new IssueModel({
+            const initialIssue = new IssueModel({
                 issue: req.body.issue,
                 customerId: customerId,
                 contract: 'TBD',
@@ -50,4 +53,49 @@ exports.createNewCustomer = [
     },
 ];
 
-exports.newIssue = [(req, res) => {}];
+exports.customerIssue = [
+    ...issuesSanitize,
+    (req, res) => {
+        const errors = validationResult(req);
+
+        // inputs did not pass validation
+        if (!errors.isEmpty()) {
+            console.log(errors);
+            return res.json({
+                error: 'Check inputs',
+            });
+        }
+
+        const issueId = uuidv4();
+
+        const issue = new IssueModel({
+            issue: req.body.issue,
+            customerId: req.body.customerId,
+            contract: 'TBD',
+            id: issueId,
+        }).save((err) => {
+            if (err) {
+                return res.json({ error: err.message });
+            }
+            const customer = CustomerModel.findOne(
+                { id: req.body.customerId },
+                (err, customer) => {
+                    if (err) {
+                        return res.json({ error: err.message });
+                    }
+                    customer
+                        .updateOne({
+                            $push: { issues: issueId },
+                        })
+                        .exec((err) => {
+                            if (err)
+                                res.json({
+                                    error: 'Could not save issue to customer',
+                                });
+                            res.json({ message: 'New issue successful' });
+                        });
+                }
+            );
+        });
+    },
+];
