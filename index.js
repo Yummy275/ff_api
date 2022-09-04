@@ -4,6 +4,9 @@ require('dotenv').config();
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
+//routes
+const customerRoutes = require('./routes/customer');
+
 const app = express();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
@@ -27,5 +30,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.get('/', (req, res) => {
     res.send('Welcome home');
 });
+
+app.use('/customer', customerRoutes);
 
 app.listen('3000', () => console.log('App is listening on port 3000'));
