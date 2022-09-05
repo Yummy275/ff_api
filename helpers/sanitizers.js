@@ -21,7 +21,7 @@ exports.createCustomerSanitize = [
     body('zip').isPostalCode('any'),
 ];
 
-exports.issuesSanitize = [
+exports.issueSanitize = [
     body('issue')
         .trim()
         .isLength({ min: 1, max: 1000 })
