@@ -6,6 +6,7 @@ const cors = require('cors');
 
 //routes
 const customerRoutes = require('./routes/customer');
+const issueRoutes = require('./routes/issue');
 
 const app = express();
 app.use(cookieParser());
@@ -32,5 +33,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/customer', customerRoutes);
+app.use('/issue', issueRoutes);
 
 app.listen('3000', () => console.log('App is listening on port 3000'));

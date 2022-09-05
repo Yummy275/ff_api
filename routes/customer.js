@@ -13,7 +13,5 @@ router.post('/create', [
     ...issueSanitize,
     issueController.createIssue,
 ]);
-router.post('/new-issue', ...issueSanitize, issueController.createIssue);
-router.get('/delete-issue/:issueId', issueController.deleteIssue);
 
 module.exports = router;

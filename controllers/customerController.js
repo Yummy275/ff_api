@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 exports.createNewCustomer = (req, res, next) => {
     const errors = validationResult(req);
 
-    // inputs did not pass validation
+    // if inputs did not pass validation
     if (!errors.isEmpty()) {
         console.log(errors);
         res.json({
@@ -32,8 +32,10 @@ exports.createNewCustomer = (req, res, next) => {
         }
         if (req.body.issue) {
             //issue creation
-            req.body.issueCustomerId = customerId;
+            req.body.customerId = customerId;
             next();
+        } else {
+            res.json({ message: 'Created user' });
         }
     });
 };

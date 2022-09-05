@@ -1,7 +1,6 @@
 const IssueModel = require('../models/Issue');
 const { v4: uuidv4 } = require('uuid');
 const { validationResult } = require('express-validator');
-const { issueSanitize } = require('../helpers/sanitizers');
 const Customer = require('../models/Customer');
 
 exports.createIssue = (req, res) => {
@@ -15,9 +14,9 @@ exports.createIssue = (req, res) => {
     }
 
     const issueId = uuidv4();
-    const initialIssue = new IssueModel({
+    const newIssue = new IssueModel({
         issue: req.body.issue,
-        customerId: req.body.issueCustomerId,
+        customerId: req.body.customerId,
         contract: 'TBD',
         id: issueId,
     }).save((err) => {
@@ -25,7 +24,7 @@ exports.createIssue = (req, res) => {
             return res.json({ error: err.message });
         }
         Customer.findOneAndUpdate(
-            { id: req.body.issueCustomerId },
+            { id: req.body.customerId },
             { $push: { issues: issueId } }
         ).exec((err) => {
             if (err) {
@@ -57,5 +56,30 @@ exports.deleteIssue = (req, res) => {
                     });
             }
         );
+    });
+};
+
+exports.addIssueNote = (req, res) => {
+    const today = new Date().toLocaleDateString();
+    const newNote = {
+        note: req.body.note,
+        date: today,
+    };
+    IssueModel.findOneAndUpdate(
+        { id: req.params.issueId },
+        { $push: { notes: newNote } }
+    ).exec((err) => {
+        if (err) return res.json({ error: err.message });
+        res.json({ message: 'Added note' });
+    });
+};
+
+exports.deleteIssueNote = (req, res) => {
+    IssueModel.findOneAndUpdate(
+        { id: req.params.issueId },
+        { $pull: { notes: { note: req.body.note } } }
+    ).exec((err) => {
+        if (err) return res.json({ error: err.message });
+        res.json({ message: 'Deleted note' });
     });
 };
