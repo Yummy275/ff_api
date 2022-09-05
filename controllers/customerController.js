@@ -90,7 +90,7 @@ exports.customerIssue = [
                         .exec((err) => {
                             if (err)
                                 res.json({
-                                    error: 'Could not save issue to customer',
+                                    error: err.message,
                                 });
                             res.json({ message: 'New issue successful' });
                         });
@@ -99,3 +99,27 @@ exports.customerIssue = [
         });
     },
 ];
+
+exports.deleteIssue = (req, res) => {
+    IssueModel.findOne({ id: req.params.issueId }).exec((err, issue) => {
+        if (err || !issue) {
+            return res.json({ error: 'Error finding issue' });
+        }
+        CustomerModel.findOne({ id: issue.customerId }).exec(
+            (err, customer) => {
+                if (err) {
+                    return res.json({ error: err.message });
+                }
+                customer
+                    .updateOne({ $pull: { issues: issue.id } })
+                    .exec((err) => {
+                        if (err) {
+                            return res.json({ error: err.message });
+                        }
+                        issue.remove();
+                        return res.json({ message: 'Deleted issue' });
+                    });
+            }
+        );
+    });
+};
