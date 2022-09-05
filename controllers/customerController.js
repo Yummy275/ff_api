@@ -1,5 +1,4 @@
 const CustomerModel = require('../models/Customer');
-const IssueModel = require('../models/Issue');
 const { validationResult } = require('express-validator');
 const { v4: uuidv4 } = require('uuid');
 
@@ -35,7 +34,7 @@ exports.createNewCustomer = (req, res, next) => {
             req.body.customerId = customerId;
             next();
         } else {
-            res.json({ message: 'Created user' });
+            res.json({ message: 'Created customer' });
         }
     });
 };
