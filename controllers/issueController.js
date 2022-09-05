@@ -40,22 +40,16 @@ exports.deleteIssue = (req, res) => {
         if (err || !issue) {
             return res.json({ error: 'Error finding issue' });
         }
-        CustomerModel.findOne({ id: issue.customerId }).exec(
-            (err, customer) => {
-                if (err) {
-                    return res.json({ error: err.message });
-                }
-                customer
-                    .updateOne({ $pull: { issues: issue.id } })
-                    .exec((err) => {
-                        if (err) {
-                            return res.json({ error: err.message });
-                        }
-                        issue.remove();
-                        return res.json({ message: 'Deleted issue' });
-                    });
+        CustomerModel.findOneAndUpdate(
+            { id: issue.customerId },
+            { $pull: { issues: issue.id } }
+        ).exec((err) => {
+            if (err) {
+                return res.json({ error: err.message });
             }
-        );
+            issue.remove();
+            return res.json({ message: 'Deleted issue' });
+        });
     });
 };
 
