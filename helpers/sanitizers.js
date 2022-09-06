@@ -4,15 +4,11 @@ exports.createCustomerSanitize = [
     body('firstName')
         .trim()
         .isLength({ min: 1, max: 50 })
-        .withMessage('First name must be less than 50 characters')
-        .isAlpha()
-        .withMessage('Name must be letters.'),
+        .withMessage('First name must be less than 50 characters'),
     body('lastName')
         .trim()
         .isLength({ min: 1, max: 50 })
-        .withMessage('First name must be less than 50 characters')
-        .isAlpha()
-        .withMessage('Name must be letters.'),
+        .withMessage('First name must be less than 50 characters'),
     body('email').isEmail().normalizeEmail(),
     body('phone').matches(/^(\(\d{3}\)|\d{3})-?\d{3}-?\d{4}$/),
     body('street').trim().isLength({ max: 120 }).toLowerCase(),

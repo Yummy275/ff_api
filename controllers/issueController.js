@@ -2,6 +2,7 @@ const IssueModel = require('../models/Issue');
 const { v4: uuidv4 } = require('uuid');
 const { validationResult } = require('express-validator');
 const Customer = require('../models/Customer');
+const { createIssuePdf } = require('../helpers/createIssuePdf');
 
 exports.createIssue = (req, res) => {
     const errors = validationResult(req);
@@ -30,6 +31,7 @@ exports.createIssue = (req, res) => {
             if (err) {
                 return res.json({ error: err.message });
             }
+            createIssuePdf(req.body);
             res.json({ message: 'Customed issue created' });
         });
     });
