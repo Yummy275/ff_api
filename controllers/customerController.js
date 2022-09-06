@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 
 exports.createNewCustomer = (req, res, next) => {
     const errors = validationResult(req);
-
+    console.log(`Creating customer ${req.body.firstName} ${req.body.lastName}`);
     // if inputs did not pass validation
     if (!errors.isEmpty()) {
         console.log(errors);

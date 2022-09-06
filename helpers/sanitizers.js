@@ -14,11 +14,11 @@ exports.createCustomerSanitize = [
         .isAlpha()
         .withMessage('Name must be letters.'),
     body('email').isEmail().normalizeEmail(),
-    body('phone').isMobilePhone(),
+    body('phone').matches(/^(\(\d{3}\)|\d{3})-?\d{3}-?\d{4}$/),
     body('street').trim().isLength({ max: 120 }).toLowerCase(),
     body('city').trim().isLength({ max: 50 }).toLowerCase(),
-    body('state').trim().isLength({ max: 2 }),
-    body('zip').isPostalCode('any'),
+    body('state').trim().isLength({ max: 50 }),
+    body('zip').isLength({ max: 50 }),
 ];
 
 exports.issueSanitize = [
