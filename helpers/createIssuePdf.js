@@ -1,5 +1,6 @@
 const { jsPDF } = require('jspdf');
 const { legalWords } = require('./legalWords');
+const fs = require('fs');
 
 exports.createIssuePdf = (data, pdfFileName) => {
     const doc = new jsPDF({
@@ -37,5 +38,16 @@ exports.createIssuePdf = (data, pdfFileName) => {
     doc.setFontSize(16);
     doc.text(today.toLocaleDateString(), 10, 200);
     doc.addImage(data.signature, 10, 210);
-    doc.save(pdfFileName + '.pdf');
+
+    //save pdf and move into folder
+    const fileName = pdfFileName + '.pdf';
+    doc.save(fileName);
+    if (!fs.existsSync(process.env.PDF_SAVE_PATH)) {
+        fs.mkdirSync(process.env.PDF_SAVE_PATH);
+    }
+    const oldPath = `./${fileName}`;
+    const newPath = process.env.PDF_SAVE_PATH + `/${fileName}`;
+    fs.rename(oldPath, newPath, function (err) {
+        if (err) throw err;
+    });
 };
