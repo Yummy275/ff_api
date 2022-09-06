@@ -31,7 +31,7 @@ exports.createIssue = (req, res) => {
             if (err) {
                 return res.json({ error: err.message });
             }
-            createIssuePdf(req.body);
+            createIssuePdf(req.body, 'testing');
             res.json({ message: 'Customed issue created' });
         });
     });

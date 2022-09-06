@@ -1,4 +1,5 @@
 const { jsPDF } = require('jspdf');
+const { legalWords } = require('./legalWords');
 
 exports.createIssuePdf = (data, pdfFileName) => {
     const doc = new jsPDF({
@@ -24,5 +25,13 @@ exports.createIssuePdf = (data, pdfFileName) => {
     doc.setFontSize(16);
     doc.text(customerInfoStrings, 10, 30);
 
-    doc.save(pdfFileName);
+    doc.addPage();
+    doc.setFontSize(8);
+    const legalText = [];
+    for (const section in legalWords) {
+        legalText.push(legalWords[section]);
+    }
+    doc.text(legalText, 10, 10, { maxWidth: 195 });
+
+    doc.save(pdfFileName + '.pdf');
 };
