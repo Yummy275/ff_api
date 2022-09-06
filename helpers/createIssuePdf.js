@@ -7,9 +7,11 @@ exports.createIssuePdf = (data, pdfFileName) => {
         unit: 'mm',
         format: 'letter',
     });
+    const today = new Date();
     const fullName = `${data.firstName} ${data.lastName}`;
     const address = `${data.street} ${data.city} ${data.state}, ${data.zip}`;
     const customerInfoStrings = [
+        today.toLocaleDateString(),
         `Name: ${fullName}`,
         `Phone: ${data.phone}`,
         `Email: ${data.email}`,
@@ -20,7 +22,7 @@ exports.createIssuePdf = (data, pdfFileName) => {
         customerInfoStrings.push('Left accessories');
     }
     doc.setLineHeightFactor(1.5);
-    doc.setFontSize(20);
+    doc.setFontSize(22);
     doc.text('FastFix Computer Repair', 10, 10);
     doc.setFontSize(16);
     doc.text(customerInfoStrings, 10, 30);
@@ -32,6 +34,8 @@ exports.createIssuePdf = (data, pdfFileName) => {
         legalText.push(legalWords[section]);
     }
     doc.text(legalText, 10, 10, { maxWidth: 195 });
-
+    doc.setFontSize(16);
+    doc.text(today.toLocaleDateString(), 10, 200);
+    doc.addImage(data.signature, 10, 210);
     doc.save(pdfFileName + '.pdf');
 };
