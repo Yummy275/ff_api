@@ -38,3 +38,9 @@ exports.createNewCustomer = (req, res, next) => {
         }
     });
 };
+
+exports.getCustomers = (req, res) => {
+    CustomerModel.find({}).exec((err, customers) => {
+        res.send(customers);
+    });
+};

@@ -7,6 +7,7 @@ const {
     issueSanitize,
 } = require('../helpers/sanitizers');
 
+router.get('/get-list', customerController.getCustomers);
 router.post('/create', [
     ...createCustomerSanitize,
     customerController.createNewCustomer,
